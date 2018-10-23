@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        html,
+        body,
+        div {
+            padding: 0px;
+            margin: 0px;
+        }
+
+        .game-area {
+            width: 500px;
+            height: 500px;
+            background-color: black;
+        }
+
+        .player15 {
+            background-color: blue;
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            left: 50px;
+            top: 0px;
+        }
+
+        .target {
+            background-color: red;
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            left: 0px;
+            top: 0px;
+            
+        }
+
+        h1 {
+            position : absolute;
+            left: 650px;
+            top: 5px;
+        }
+
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1 class="score">Score : 0 </h1>
+        <div class="game-area">
+            <div class="player15"></div>
+            <div class="target"></div>
+        </div>
+    </div>
+    <script>
+        
+        var width =  500;
+        var height =  500;// BOARD DIMENSIONS
+        var score = 0;
+         
+        var playerSize = 50; // PLAYER AND TARGET SIZE
+        var direction = "ArrowRight"; // INITIAL DIRECTION
+
+        var target = document.querySelector(".target");
+        var player15 = document.querySelector(".player15");
+        var scoreElement = document.querySelector(".score");
+
+        var posX;
+        var posY;
+        var targetPosX;
+        var targetPosY;
+        var velocity = 10;
+        window.addEventListener("keydown", game);
+        generateTarget(width, height);
+
+        function game(event) {
+            direction = event.key;
+        }
+        setInterval(() => {
+
+        }, 1000);
+        setInterval(() => { // GAME LOOP EVENT
+            posX = getComputedStyle(player15);
+            posY = getComputedStyle(player15);
+            posX = parseInt(posX.left.slice(0, -2));
+            posY = parseInt(posY.top.slice(0, -2));
+
+            // COLLISION TO BORDERS
+            if (posX > width - playerSize)
+                posX = 0;
+            else if (posX < 0)
+                posX = width - playerSize;
+            else if (posY < 0)
+                posY = height - playerSize;
+            else if (posY > height - playerSize)
+                posY = 0;
+
+             // CURRENT PLAYER DIRECTION 
+
+            if (direction == "ArrowRight") 
+                posX += velocity;
+            else if (direction == "ArrowLeft") 
+                posX -= velocity;
+            else if (direction == "ArrowDown") 
+                posY += velocity;
+            else if (direction == "ArrowUp") 
+                posY -= velocity;
+            
+            if ((Math.abs(posX - targetPosX) < 50 && Math.abs(posY - targetPosY) < 50)){
+                score++;
+                scoreElement.innerHTML = "Score : " + score;
+                generateTarget(width, height);
+            }
+            
+            player15.style.left = "" + posX + "px";
+            player15.style.top = "" + posY + "px";
+        }, 1000 / 15);
+
+        function generateTarget(width, height){
+            let newX = Math.floor((Math.random() * width) / 50) * 50;
+            let newY = Math.floor((Math.random() * height) / 50 ) * 50; // DIVIDE AND MULTIPLY TO ROUND TO THE TEN
+            targetPosX = newX;
+            targetPosY = newY;
+            newX = "" + newX;          
+            newY = "" + newY;
+            target.style.top = newY + "px";
+            target.style.left = newX + "px";
+        }
+
+
+
+
+
+    </script>
+</body>
+
+</html>
